@@ -1,0 +1,39 @@
+int sendTo = -1;
+if (allNodes.size() != 0) {
+    if (entries.containsValue(destid)) {
+	sendTo = destid;
+    } else if (destid > entries.get(Collections.max(entries.keySet()))) {
+	sendTo = entries.get(Collections.max(entries.keySet()));
+    } else {
+    	//TODO: Fix for 2^n entries (for loop starting at 2 hops to 2^n hops?)
+    	/*if (destid < entries.get(2)) {
+    		sendTo = entries.get(Collections.max(entries.keySet()));
+    	} else {
+    		sendTo = entries.get(2);
+    	}*/
+    	
+    	if (destid < myID) {
+    		for (int i = entries.size() - 1; i > 0; i--) {
+    			if (destid > entries.get((int) Math.pow(2, i))) {
+    				sendTo = entries.get((int) Math.pow(2, i));
+    				break;
+    			}
+    		}
+    		
+    		if (sendTo == -1) {
+    			sendTo = Collections.max(entries.values());
+    		}
+    	} else {
+    		for (int i = 1; i < entries.size(); i++) {
+    			if (destid < (int) Math.pow(2, i) && destid > Math.pow(2, i-1)) {
+    				sendTo = entries.get((int) Math.pow(2, i-1));
+    				break;
+    			}
+    		}
+    		
+    		if (sendTo == -1) {
+    			sendTo = Collections.max(entries.values());
+    		}
+    	}
+    }
+}
